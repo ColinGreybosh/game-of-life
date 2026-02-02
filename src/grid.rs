@@ -1,28 +1,15 @@
-pub struct World {
-    grid: Vec<Cell>,
+use crate::cell;
+
+pub struct Grid {
+    grid: Vec<cell::Cell>,
     width: usize,
     height: usize,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Cell {
-    Alive,
-    Dead,
-}
-
-impl std::fmt::Display for Cell {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Cell::Alive => write!(f, "■"),
-            Cell::Dead => write!(f, "□"),
-        }
-    }
-}
-
-impl World {
-    pub fn new(width: usize, height: usize) -> World {
-        World {
-            grid: vec![Cell::Dead; width * height],
+impl Grid {
+    pub fn new(width: usize, height: usize) -> Grid {
+        Grid {
+            grid: vec![cell::Cell::Dead; width * height],
             width,
             height,
         }
@@ -33,23 +20,35 @@ impl World {
         self.width * j + i
     }
 
-    pub fn get(&self, x: isize, y: isize) -> &Cell {
+    fn get_mut(&mut self, x: isize, y: isize) -> &mut cell::Cell {
+        let index = self.linearize_coordinates(x, y);
+        self.grid.get_mut(index).unwrap()
+    }
+}
+
+impl cell::Cellular for Grid {
+    fn get(&self, x: isize, y: isize) -> &cell::Cell {
         let index = self.linearize_coordinates(x, y);
         self.grid.get(index).unwrap()
     }
 
-    fn get_mut(&mut self, x: isize, y: isize) -> &mut Cell {
-        let index = self.linearize_coordinates(x, y);
-        self.grid.get_mut(index).unwrap()
-    }
-
-    pub fn set(&mut self, x: isize, y: isize, cell: Cell) {
+    fn set(&mut self, x: isize, y: isize, cell: cell::Cell) {
         let mut _current_cell = self.get_mut(x, y);
         *_current_cell = cell;
     }
 }
 
-impl std::fmt::Display for World {
+impl Clone for Grid {
+    fn clone(&self) -> Self {
+        Grid {
+            grid: self.grid.clone(),
+            width: self.width,
+            height: self.height,
+        }
+    }
+}
+
+impl std::fmt::Display for Grid {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for (index, cell) in self.grid.iter().enumerate() {
             write!(f, "{} ", cell.to_string())?;
@@ -73,28 +72,29 @@ fn bounded(value: isize, max: usize) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::cell::Cellular;
 
     #[test]
     fn can_set_cell() {
-        let mut world = World::new(4, 4);
-        world.set(2, 2, Cell::Alive);
-        let cell = world.get(2, 2);
-        assert_eq!(*cell, Cell::Alive);
+        let mut grid = Grid::new(4, 4);
+        grid.set(2, 2, cell::Cell::Alive);
+        let cell = grid.get(2, 2);
+        assert_eq!(*cell, cell::Cell::Alive);
     }
 
     #[test]
     fn can_use_negative_coordinates() {
-        let mut world = World::new(4, 4);
-        world.set(3, 3, Cell::Alive);
-        let cell = world.get(-1, -1);
-        assert_eq!(*cell, Cell::Alive);
+        let mut grid = Grid::new(4, 4);
+        grid.set(3, 3, cell::Cell::Alive);
+        let cell = grid.get(-1, -1);
+        assert_eq!(*cell, cell::Cell::Alive);
     }
 
     #[test]
     fn can_use_large_coordinates() {
-        let mut world = World::new(4, 4);
-        world.set(4, 4, Cell::Alive);
-        let cell = world.get(0, 0);
-        assert_eq!(*cell, Cell::Alive);
+        let mut grid = Grid::new(4, 4);
+        grid.set(4, 4, cell::Cell::Alive);
+        let cell = grid.get(0, 0);
+        assert_eq!(*cell, cell::Cell::Alive);
     }
 }
