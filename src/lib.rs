@@ -1,3 +1,4 @@
+mod grid;
 mod utils;
 
 use wasm_bindgen::prelude::*;
@@ -9,5 +10,9 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn greet() {
-    alert("Hello, game-of-life!");
+    let mut world = grid::World::new(20, 20);
+    for i in 0..20 {
+        world.set(i, i, grid::Cell::Alive);
+    }
+    alert(&format!("Hello, World!\n{}", world.to_string()));
 }
