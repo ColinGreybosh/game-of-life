@@ -1,34 +1,40 @@
 import { Game } from "game-of-life";
 import { Wasm } from "./wasm";
 
-const CELL_SIZE = 3;
-const GRID_COLOR = "#F1FAFF";
-const ALIVE_COLOR = "#051118";
-const DEAD_COLOR = "#F8F7F4";
-
+interface Color {
+  alive: string;
+  dead: string;
+  grid: string
+}
 export class GameState {
-  readonly wasm: Wasm;
-  readonly width: number;
-  readonly height: number;
-  readonly ctx: CanvasRenderingContext2D;
-  readonly game: Game;
+  private readonly wasm: Wasm;
+  private readonly width: number;
+  private readonly height: number;
+  private readonly ctx: CanvasRenderingContext2D;
+  private readonly game: Game;
+  private readonly cellSize: number;
+  private readonly color: Color;
 
   constructor(wasm: Wasm, args: {
     canvasElementId: string;
     width: number;
     height: number;
+    cellSize: number;
+    color: Color;
   }) {
     this.wasm = wasm;
     this.width = args.width;
     this.height = args.height;
+    this.cellSize = args.cellSize;
+    this.color = args.color;
     
     const canvas = document.getElementById(args.canvasElementId);
     if (canvas == null || !(canvas instanceof HTMLCanvasElement)) {
       throw new Error(`failed to locate <canvas> element with ID ${args.canvasElementId}`);
     }
 
-    canvas.height = (CELL_SIZE + 1) * this.height + 1;
-    canvas.width = (CELL_SIZE + 1) * this.width + 1;
+    canvas.height = (this.cellSize + 1) * this.height + 1;
+    canvas.width = (this.cellSize + 1) * this.width + 1;
 
     const ctx = canvas.getContext("2d");
     if (ctx == null) {
@@ -39,7 +45,7 @@ export class GameState {
     this.game = wasm.Game.new(this.width, this.height);
   }
 
-  tick() {
+  public tick() {
     this.drawGrid();
     this.drawCells();
     this.game.update();
@@ -47,18 +53,18 @@ export class GameState {
 
   private drawGrid() {
     this.ctx.beginPath();
-    this.ctx.strokeStyle = GRID_COLOR;
+    this.ctx.strokeStyle = this.color.grid;
 
     // Vertical lines.
     for (let i = 0; i <= this.width; i++) {
-      this.ctx.moveTo(i * (CELL_SIZE + 1) + 1, 0);
-      this.ctx.lineTo(i * (CELL_SIZE + 1) + 1, (CELL_SIZE + 1) * this.height + 1);
+      this.ctx.moveTo(i * (this.cellSize + 1) + 1, 0);
+      this.ctx.lineTo(i * (this.cellSize + 1) + 1, (this.cellSize + 1) * this.height + 1);
     }
 
     // Horizontal lines.
     for (let j = 0; j <= this.height; j++) {
-      this.ctx.moveTo(0, j * (CELL_SIZE + 1) + 1);
-      this.ctx.lineTo((CELL_SIZE + 1) * this.width + 1, j * (CELL_SIZE + 1) + 1);
+      this.ctx.moveTo(0, j * (this.cellSize + 1) + 1);
+      this.ctx.lineTo((this.cellSize + 1) * this.width + 1, j * (this.cellSize + 1) + 1);
     }
 
     this.ctx.stroke();
@@ -74,14 +80,14 @@ export class GameState {
         const idx = this.getIndex(row, col);
 
         this.ctx.fillStyle = cells[idx] === this.wasm.Cell.Dead
-          ? DEAD_COLOR
-          : ALIVE_COLOR;
+          ? this.color.dead
+          : this.color.alive;
 
         this.ctx.fillRect(
-          col * (CELL_SIZE + 1) + 1,
-          row * (CELL_SIZE + 1) + 1,
-          CELL_SIZE,
-          CELL_SIZE
+          col * (this.cellSize + 1) + 1,
+          row * (this.cellSize + 1) + 1,
+          this.cellSize,
+          this.cellSize
         );
       }
     }

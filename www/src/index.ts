@@ -7,6 +7,12 @@ async function main() {
     canvasElementId: "game-of-life",
     width: 200,
     height: 200,
+    cellSize: 3,
+    color: {
+      alive: "#051118",
+      dead: "#F8F7F4",
+      grid: "#F1FAFF",
+    }
   });
   const loop = () => {
     game.tick();
