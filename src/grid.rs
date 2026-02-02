@@ -24,6 +24,10 @@ impl Grid {
         let index = self.linearize_coordinates(x, y);
         self.grid.get_mut(index).unwrap()
     }
+
+    pub fn cells(&self) -> Box<[cell::Cell]> {
+        self.grid.as_slice().into()
+    }
 }
 
 impl cell::Cellular for Grid {

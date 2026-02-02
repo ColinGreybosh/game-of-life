@@ -17,9 +17,9 @@ impl Game {
     pub fn new(width: usize, height: usize) -> Game {
         let mut current_grid = grid::Grid::new(width, height);
         for i in 0..width {
-          for j in 0..height {
-            current_grid.set(i.try_into().unwrap(), j.try_into().unwrap(), rand::random());
-          }
+            for j in 0..height {
+                current_grid.set(i.try_into().unwrap(), j.try_into().unwrap(), rand::random());
+            }
         }
         let next_grid = current_grid.clone();
         Game {
@@ -36,10 +36,10 @@ impl Game {
                 let current_cell = self.current_grid.get(i, j).clone();
                 let live_neighbors = self.count_live_neighbors(i, j);
                 let next_cell = match (current_cell, live_neighbors) {
-                  (cell::Cell::Alive, ..2) => cell::Cell::Dead,
-                  (cell::Cell::Alive, 4..) => cell::Cell::Dead,
-                  (cell::Cell::Dead, 3) => cell::Cell::Alive,
-                  (cell, _) => cell,
+                    (cell::Cell::Alive, ..2) => cell::Cell::Dead,
+                    (cell::Cell::Alive, 4..) => cell::Cell::Dead,
+                    (cell::Cell::Dead, 3) => cell::Cell::Alive,
+                    (cell, _) => cell,
                 };
                 self.next_grid.set(i, j, next_cell);
             }
@@ -48,7 +48,11 @@ impl Game {
     }
 
     pub fn render(&self) -> String {
-      self.to_string()
+        self.to_string()
+    }
+
+    pub fn cells(&self) -> Box<[cell::Cell]> {
+        self.current_grid.cells()
     }
 
     fn count_live_neighbors(&self, x: isize, y: isize) -> usize {
@@ -72,6 +76,7 @@ impl Cellular for Game {
     fn get(&self, x: isize, y: isize) -> &cell::Cell {
         self.current_grid.get(x, y)
     }
+
     fn set(&mut self, x: isize, y: isize, cell: cell::Cell) {
         self.current_grid.set(x, y, cell);
     }
