@@ -1,11 +1,7 @@
 import { Game } from "game-of-life";
 import { Wasm } from "./wasm";
+import { Colors } from "./color";
 
-interface Color {
-  alive: string;
-  dead: string;
-  grid: string
-}
 export class GameState {
   private readonly wasm: Wasm;
   private readonly width: number;
@@ -13,20 +9,20 @@ export class GameState {
   private readonly ctx: CanvasRenderingContext2D;
   private readonly game: Game;
   private readonly cellSize: number;
-  private readonly color: Color;
+  private readonly colors: Colors;
 
   constructor(wasm: Wasm, args: {
     canvasElementId: string;
     width: number;
     height: number;
     cellSize: number;
-    color: Color;
+    colors: Colors;
   }) {
     this.wasm = wasm;
     this.width = args.width;
     this.height = args.height;
     this.cellSize = args.cellSize;
-    this.color = args.color;
+    this.colors = args.colors;
     
     const canvas = document.getElementById(args.canvasElementId);
     if (canvas == null || !(canvas instanceof HTMLCanvasElement)) {
@@ -53,7 +49,7 @@ export class GameState {
 
   private drawGrid() {
     this.ctx.beginPath();
-    this.ctx.strokeStyle = this.color.grid;
+    this.ctx.strokeStyle = this.colors.grid();
 
     // Vertical lines.
     for (let i = 0; i <= this.width; i++) {
@@ -72,6 +68,8 @@ export class GameState {
 
   private drawCells() {
     const cells = this.game.cells();
+    const deadColor = this.colors.dead();
+    const aliveColor = this.colors.alive();
 
     this.ctx.beginPath();
 
@@ -80,8 +78,8 @@ export class GameState {
         const idx = this.getIndex(row, col);
 
         this.ctx.fillStyle = cells[idx] === this.wasm.Cell.Dead
-          ? this.color.dead
-          : this.color.alive;
+          ? deadColor
+          : aliveColor;
 
         this.ctx.fillRect(
           col * (this.cellSize + 1) + 1,
