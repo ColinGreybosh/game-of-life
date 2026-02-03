@@ -40,6 +40,10 @@ impl cell::Cellular for Grid {
         let mut _current_cell = self.get_mut(x, y);
         *_current_cell = cell;
     }
+
+    fn clear(&mut self) {
+        self.grid = vec![cell::Cell::Dead; self.width * self.height];
+    }
 }
 
 impl Clone for Grid {

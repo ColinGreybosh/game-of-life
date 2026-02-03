@@ -4,6 +4,8 @@ pub trait Cellular {
     fn get(&self, x: isize, y: isize) -> &Cell;
 
     fn set(&mut self, x: isize, y: isize, cell: Cell);
+
+    fn clear(&mut self);
 }
 
 #[repr(u8)]

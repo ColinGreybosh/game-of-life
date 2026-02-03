@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Game of Life</title>
+    <link rel="stylesheet" href="/css/stylesheet.css">
+  </head>
+  <body>
+    <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
+    <div class="col popover left">
+      <button id="play-button" type="button">
+        Pause
+      </button>
+      <button id="randomize-button" type="button">
+        Randomize
+      </button>
+      <button id="clear-button" type="button">
+        Clear
+      </button>
+      <div class="row">
+        <label for="alive-color">Alive color</label>
+        <input type="color" id="alive-color" value="#051118" />
+      </div>
+      <div class="row">
+        <label for="dead-color">Dead color</label>
+        <input type="color" id="dead-color" value="#F8F7F4" />
+      </div>
+      <div class="row">
+        <label for="grid-color">Grid color</label>
+        <input type="color" id="grid-color" value="#F8F7F4" />
+      </div>
+    </div>
+    <div>
+      <canvas id="game-of-life"></canvas>
+    </div>
+    <script src="./index.js"></script>
+  </body>
+</html>

@@ -80,6 +80,31 @@ impl Cellular for Game {
     fn set(&mut self, x: isize, y: isize, cell: cell::Cell) {
         self.current_grid.set(x, y, cell);
     }
+
+    fn clear(&mut self) {
+        self.current_grid.clear();
+        self.next_grid.clear();
+    }
+}
+
+#[wasm_bindgen]
+impl Game {
+    pub fn set_js(&mut self, x: isize, y: isize, cell: cell::Cell) {
+        Cellular::set(self, x, y, cell);
+    }
+
+    pub fn clear_js(&mut self) {
+        Cellular::clear(self);
+    }
+
+    pub fn reset(&mut self) {
+        for i in 0..self.width {
+            for j in 0..self.height {
+                self.current_grid.set(i, j, rand::random());
+                self.next_grid.set(i, j, rand::random());
+            }
+        }
+    }
 }
 
 impl std::fmt::Display for Game {

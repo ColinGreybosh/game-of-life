@@ -28,12 +28,6 @@ module.exports = {
     ],
   },
 
-  plugins: [
-    new CopyWebpackPlugin({
-      patterns: ["index.html"],
-    }),
-  ],
-
   experiments: {
     asyncWebAssembly: true,
   },
@@ -42,8 +36,7 @@ module.exports = {
 
   devServer: {
     static: {
-      directory: path.resolve(__dirname, "dist"),
+      directory: path.resolve(__dirname, "public"),
     },
-    hot: true,
-  },
+  }
 };

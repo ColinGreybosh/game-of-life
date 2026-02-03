@@ -1,6 +1,6 @@
-import { Game } from "game-of-life";
+import type { Game } from "game-of-life";
 import { Wasm } from "./wasm";
-import { Colors } from "./color";
+import type { Colors } from "./color";
 
 export class GameState {
   private readonly wasm: Wasm;
@@ -41,10 +41,24 @@ export class GameState {
     this.game = wasm.Game.new(this.width, this.height);
   }
 
-  public tick() {
+  public draw() {
     this.drawGrid();
     this.drawCells();
+  }
+
+  public tick() {
+    this.draw();
     this.game.update();
+  }
+
+  public clear() {
+    this.game.clear_js();
+    this.draw();
+  }
+
+  public reset() {
+    this.game.reset();
+    this.draw();
   }
 
   private drawGrid() {
@@ -62,7 +76,6 @@ export class GameState {
       this.ctx.moveTo(0, j * (this.cellSize + 1) + 1);
       this.ctx.lineTo((this.cellSize + 1) * this.width + 1, j * (this.cellSize + 1) + 1);
     }
-
     this.ctx.stroke();
   }
 

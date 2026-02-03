@@ -18,9 +18,18 @@ export function getColors(): Colors | undefined {
     return undefined;
   }
   return {
-    alive: () => aliveColorInput.value,
-    dead: () => deadColorInput.value,
-    grid: () => gridColorInput.value,
+    alive: () => {
+      window.localStorage.setItem("alive-color", aliveColorInput.value);
+      return aliveColorInput.value;
+    },
+    dead: () => {
+      window.localStorage.setItem("dead-color", deadColorInput.value);
+      return deadColorInput.value;
+    },
+    grid: () => {
+      window.localStorage.setItem("grid-color", gridColorInput.value);
+      return gridColorInput.value;
+    },
   }
 }
 
@@ -31,6 +40,10 @@ function getColorPicker(id: string): HTMLInputElement | undefined {
   }
   if (element.type !== "color") {
     return undefined;
+  }
+  const value = window.localStorage.getItem(id);
+  if (value != null) {
+    element.value = value;
   }
   return element;
 }
