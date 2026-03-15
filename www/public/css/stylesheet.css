@@ -30,6 +30,11 @@ div {
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+  width: 100%;
+}
+
+.between {
+  justify-content: space-between;
 }
 
 .col {
@@ -51,4 +56,9 @@ div {
   background-color: gainsboro;
   border-top-left-radius: 4px;
   padding: 1rem;
+}
+
+.button {
+  padding: 0.25em;
+  width: 100%;
 }

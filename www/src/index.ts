@@ -11,7 +11,7 @@ async function main() {
   }
   const game = new GameState(wasm, {
     canvasElementId: "game-of-life",
-    width: 200,
+    width: 250,
     height: 200,
     cellSize: 3,
     colors,
