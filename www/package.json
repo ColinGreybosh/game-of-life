@@ -7,11 +7,12 @@
     "create-wasm-app": ".bin/create-wasm-app.js"
   },
   "scripts": {
-    "start": "wasm-pack build --target bundler --out-dir pkg && webpack serve",
+    "start": "wasm-pack build --target bundler --out-dir pkg --dev && webpack serve",
     "watch:wasm": "cargo watch -s 'wasm-pack build --target bundler --out-dir pkg --dev'",
     "dev": "run-p watch:wasm start",
-    "build:wasm": "wasm-pack build --target bundler --out-dir pkg",
-    "build": "npm run build:wasm && webpack --mode production"
+    "build:wasm": "wasm-pack build --target bundler --out-dir pkg --release",
+    "build": "npm run build:wasm && webpack --mode production",
+    "preview": "serve dist"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
     "copy-webpack-plugin": "^13.0.1",
     "hello-wasm-pack": "^0.1.0",
     "npm-run-all": "^4.1.5",
+    "serve": "^14.2.6",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "webpack": "^5.104.1",
